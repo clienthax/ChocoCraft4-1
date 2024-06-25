@@ -9,19 +9,22 @@ import net.chococraft.common.entity.AbstractChocobo;
 import net.chococraft.fabric.common.config.FabricBreedingConfig;
 import net.chococraft.fabric.common.config.FabricChocoConfig;
 import net.chococraft.fabric.common.entity.FabricChocobo;
+import net.chococraft.fabric.common.packets.OpenChocoboScreenPayload;
 import net.chococraft.fabric.common.world.FeatureInjector;
 import net.chococraft.fabric.event.MountEvent;
 import net.chococraft.fabric.registry.ModDataSerializers;
 import net.chococraft.registry.ModEntities;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
 
 public class ChococraftFabric implements ModInitializer {
-	public static final ResourceLocation OPEN_CHOCOBO_SCREEN = new ResourceLocation(Chococraft.MOD_ID, "open_chocobo_screen");
+	public static final ResourceLocation OPEN_CHOCOBO_SCREEN = ResourceLocation.fromNamespaceAndPath(Chococraft.MOD_ID, "open_chocobo_screen");
 
 	public static ConfigHolder<FabricChocoConfig> config;
 	public static ConfigHolder<FabricBreedingConfig> breedingConfig;
@@ -34,11 +37,13 @@ public class ChococraftFabric implements ModInitializer {
 		EntityDataSerializers.registerSerializer(ModDataSerializers.CHOCOBO_COLOR);
 		EntityDataSerializers.registerSerializer(ModDataSerializers.MOVEMENT_TYPE);
 
+		PayloadTypeRegistry.playS2C().register(OpenChocoboScreenPayload.ID, OpenChocoboScreenPayload.CODEC);
+
 		Chococraft.init();
 
 		FeatureInjector.init();
 
-		SpawnPlacements.register(ModEntities.CHOCOBO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FabricChocobo::checkChocoboSpawnRules);
+		SpawnPlacements.register(ModEntities.CHOCOBO.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FabricChocobo::checkChocoboSpawnRules);
 
 		MountEvent.MOUNTING.register((entityMounting, entityBeingMounted, level, isMounting) -> {
 			if (isMounting) return InteractionResult.PASS;

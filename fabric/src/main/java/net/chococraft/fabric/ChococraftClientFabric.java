@@ -8,6 +8,7 @@ import net.chococraft.client.models.entities.AdultChocoboModel;
 import net.chococraft.client.models.entities.ChicoboModel;
 import net.chococraft.client.renderer.entities.ChocoboRenderer;
 import net.chococraft.common.entity.AbstractChocobo;
+import net.chococraft.fabric.common.packets.OpenChocoboScreenPayload;
 import net.chococraft.registry.ModEntities;
 import net.chococraft.registry.ModRegistry;
 import net.fabricmc.api.ClientModInitializer;
@@ -30,14 +31,11 @@ public class ChococraftClientFabric implements ClientModInitializer {
 
 		ChococraftClient.init();
 
-		ClientPlayNetworking.registerGlobalReceiver(ChococraftFabric.OPEN_CHOCOBO_SCREEN, (client, handler, buf, responseSender) -> {
-			int containerId = buf.readUnsignedByte();
-			int entityId = buf.readInt();
-
-			Entity entity = client.level.getEntity(entityId);
+		ClientPlayNetworking.registerGlobalReceiver(OpenChocoboScreenPayload.ID, (payload, context) -> {
+			Entity entity = context.client().level.getEntity(payload.entityId());
 			if (entity instanceof AbstractHorse) {
 				AbstractChocobo abstractChocobo = (AbstractChocobo) entity;
-				ChocoboInventoryScreen.openInventory(containerId, abstractChocobo);
+				ChocoboInventoryScreen.openInventory(payload.containerId(), abstractChocobo);
 			}
 		});
 

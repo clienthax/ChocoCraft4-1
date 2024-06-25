@@ -11,6 +11,7 @@ import net.chococraft.fabric.common.inventory.FabricSaddleBagMenu;
 import net.chococraft.fabric.common.items.FabricChocoDisguiseItem;
 import net.chococraft.fabric.registry.ModDataSerializers;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.core.Holder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.world.entity.EntityType;
@@ -44,7 +45,7 @@ public class ChococraftExpectPlatformImpl {
 		return new FabricSaddleBagMenu(i, inventory, (FabricChocobo) abstractChocobo);
 	}
 
-	public static AbstractChocoDisguiseItem constructChocoDisguise(ArmorMaterial material, ArmorItem.Type type, Item.Properties properties) {
+	public static AbstractChocoDisguiseItem constructChocoDisguise(Holder<ArmorMaterial> material, ArmorItem.Type type, Item.Properties properties) {
 		return new FabricChocoDisguiseItem(material, type, properties);
 	}
 

@@ -20,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -40,9 +41,10 @@ import net.minecraft.world.entity.HasCustomInventoryScreen;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
@@ -62,9 +64,10 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 
 public abstract class AbstractChocobo extends TamableAnimal implements HasCustomInventoryScreen {
+	private static final ResourceLocation STEP_HEIGHT_ID = ResourceLocation.fromNamespaceAndPath(Chococraft.MOD_ID, "step_height");
+
 	private static final String NBTKEY_CHOCOBO_COLOR = "Color";
 	private static final String NBTKEY_CHOCOBO_IS_MALE = "Male";
 	private static final String NBTKEY_MOVEMENTTYPE = "MovementType";
@@ -113,24 +116,24 @@ public abstract class AbstractChocobo extends TamableAnimal implements HasCustom
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		this.entityData.define(PARAM_COLOR, ChocoboColor.YELLOW);
-		this.entityData.define(PARAM_IS_MALE, false);
-		this.entityData.define(PARAM_FED_GOLD_GYSAHL, false);
-		this.entityData.define(PARAM_MOVEMENT_TYPE, MovementType.WANDER);
-		this.entityData.define(PARAM_SADDLE_ITEM, ItemStack.EMPTY);
-		this.entityData.define(PARAM_GENERATION, 0);
-		this.entityData.define(ALLOWED_FLIGHT, true);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(PARAM_COLOR, ChocoboColor.YELLOW);
+		builder.define(PARAM_IS_MALE, false);
+		builder.define(PARAM_FED_GOLD_GYSAHL, false);
+		builder.define(PARAM_MOVEMENT_TYPE, MovementType.WANDER);
+		builder.define(PARAM_SADDLE_ITEM, ItemStack.EMPTY);
+		builder.define(PARAM_GENERATION, 0);
+		builder.define(ALLOWED_FLIGHT, true);
 	}
 
 	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor levelAccessor, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor levelAccessor, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn) {
 		if (levelAccessor.getBiome((new BlockPos(blockPosition().below()))).is(BiomeTags.IS_NETHER)) {
 			this.setChocoboColor(ChocoboColor.FLAME);
 		}
 		this.finalizeChocobo(this);
-		return super.finalizeSpawn(levelAccessor, difficultyIn, reason, spawnDataIn, dataTag);
+		return super.finalizeSpawn(levelAccessor, difficultyIn, reason, spawnDataIn);
 	}
 
 	private void finalizeChocobo(AbstractChocobo chocobo) {
@@ -151,7 +154,7 @@ public abstract class AbstractChocobo extends TamableAnimal implements HasCustom
 
 		this.setGeneration(compound.getInt(NBTKEY_CHOCOBO_GENERATION));
 		if (compound.contains("wornSaddle", 10))
-			this.setSaddleType(ItemStack.of(compound.getCompound("wornSaddle")));
+			this.setSaddleType(ItemStack.parseOptional(this.registryAccess(), compound.getCompound("wornSaddle")));
 
 		this.setAllowedFlight(compound.getBoolean(NBTKEY_ALLOWED_FLIGHT));
 	}
@@ -165,7 +168,7 @@ public abstract class AbstractChocobo extends TamableAnimal implements HasCustom
 
 		compound.putInt(NBTKEY_CHOCOBO_GENERATION, this.getGeneration());
 		if (!getSaddle().isEmpty())
-			compound.put("wornSaddle", getSaddle().save(new CompoundTag()));
+			compound.put("wornSaddle", getSaddle().save(this.registryAccess(), new CompoundTag()));
 
 		compound.putBoolean(NBTKEY_ALLOWED_FLIGHT, this.allowedFlight());
 	}
@@ -242,8 +245,8 @@ public abstract class AbstractChocobo extends TamableAnimal implements HasCustom
 	//endregion
 
 	@Override
-	protected Vector3f getPassengerAttachmentPoint(Entity entity, EntityDimensions entityDimensions, float f) {
-		return new Vector3f(0.0F, 1.65F, 0.0F);
+	protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions entityDimensions, float f) {
+		return new Vec3(0.0F, 1.65F, 0.0F);
 	}
 
 	@Nullable
@@ -441,6 +444,19 @@ public abstract class AbstractChocobo extends TamableAnimal implements HasCustom
 				this.addEffect(ability.get());
 			});
 		}
+		this.updateStepHeight();
+	}
+
+	private void updateStepHeight() {
+		AttributeInstance attributeinstance = this.getAttribute(Attributes.STEP_HEIGHT);
+		float stepHeight = getAbilityInfo().getStepHeight(true);
+		if (attributeinstance != null) {
+			attributeinstance.addOrUpdateTransientModifier(
+					new AttributeModifier(
+							STEP_HEIGHT_ID, stepHeight, AttributeModifier.Operation.ADD_VALUE
+					)
+			);
+		}
 	}
 
 	@Override
@@ -559,7 +575,7 @@ public abstract class AbstractChocobo extends TamableAnimal implements HasCustom
 					this.usePlayerItem(player, hand, heldItemStack);
 					if ((float) Math.random() < ChococraftExpectPlatform.getTameChance()) {
 						this.setOwnerUUID(player.getUUID());
-						this.setTame(true);
+						this.setTame(true, false);
 						if (ChococraftExpectPlatform.nameTamedChocobos()) {
 							if (!hasCustomName()) {
 								setCustomName(DefaultNames.getRandomName(random, isMale()));
@@ -620,8 +636,12 @@ public abstract class AbstractChocobo extends TamableAnimal implements HasCustom
 	}
 
 	@Override
+	public void setTame(boolean tame, boolean applyTamingSideEffects) {
+		super.setTame(tame, applyTamingSideEffects);
+		this.reassessTameGoals();
+	}
+
 	protected void reassessTameGoals() {
-		super.reassessTameGoals();
 		if (chocoboAvoidPlayerGoal == null) {
 			chocoboAvoidPlayerGoal = new AvoidEntityGoal<>(this, Player.class, 10.0F, 1.0D, 1.2D, livingEntity -> {
 				if (livingEntity instanceof Player player) {
@@ -653,16 +673,8 @@ public abstract class AbstractChocobo extends TamableAnimal implements HasCustom
 		}
 	}
 
-	@Override
-	public EntityDimensions getDimensions(Pose pose) {
-		if (isBaby()) {
-			return super.getDimensions(pose).scale(0.5F);
-		}
-		return super.getDimensions(pose);
-	}
-
 	public static boolean checkChocoboSpawnRules(EntityType<? extends AbstractChocobo> entityType, LevelAccessor levelAccessor,
-												 MobSpawnType spawnType, BlockPos pos, RandomSource randomSource) {
+	                                             MobSpawnType spawnType, BlockPos pos, RandomSource randomSource) {
 		if (levelAccessor.getBiome(new BlockPos(pos)).is(BiomeTags.IS_NETHER)) {
 			BlockPos blockpos = pos.below();
 			return spawnType == MobSpawnType.SPAWNER || levelAccessor.getBlockState(blockpos).isValidSpawn(levelAccessor, blockpos, entityType);

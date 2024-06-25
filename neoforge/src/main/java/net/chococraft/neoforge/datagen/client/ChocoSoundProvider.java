@@ -35,6 +35,6 @@ public class ChocoSoundProvider extends SoundDefinitionsProvider {
 	}
 
 	public ResourceLocation modLoc(String name) {
-		return new ResourceLocation(Chococraft.MOD_ID, name);
+		return ResourceLocation.fromNamespaceAndPath(Chococraft.MOD_ID, name);
 	}
 }

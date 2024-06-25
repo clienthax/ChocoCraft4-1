@@ -1,13 +1,16 @@
 package net.chococraft.common.world.worldgen;
 
+import net.chococraft.Chococraft;
 import net.chococraft.common.blocks.GysahlGreenBlock;
 import net.chococraft.registry.ModRegistry;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -25,18 +28,26 @@ import java.util.List;
 public class ModFeatures {
 	protected static final BlockState GYSAHL_GREEN = ModRegistry.GYSAHL_GREEN.get().defaultBlockState().setValue(GysahlGreenBlock.AGE, GysahlGreenBlock.MAX_AGE);
 
-	public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_GYSAHL_GREEN = FeatureUtils.createKey("chococraft:patch_gysahl_green");
+	public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_GYSAHL_GREEN = createConfiguredKey("patch_gysahl_green");
 
-	public static void configuredBootstrap(BootstapContext<ConfiguredFeature<?, ?>> context) {
+	public static ResourceKey<ConfiguredFeature<?, ?>> createConfiguredKey(String pName) {
+		return ResourceKey.create(Registries.CONFIGURED_FEATURE, ResourceLocation.fromNamespaceAndPath(Chococraft.MOD_ID, pName));
+	}
+
+	public static void configuredBootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
 		FeatureUtils.register(context, PATCH_GYSAHL_GREEN,
 				Feature.RANDOM_PATCH, FeatureUtils.simplePatchConfiguration(Feature.SIMPLE_BLOCK,
 						new SimpleBlockConfiguration(BlockStateProvider.simple(GYSAHL_GREEN)))
 		);
 	}
 
-	public static final ResourceKey<PlacedFeature> PLACED_PATCH_GYSAHL_GREEN = PlacementUtils.createKey("chococraft:patch_gysahl_green");
+	public static final ResourceKey<PlacedFeature> PLACED_PATCH_GYSAHL_GREEN = createPlacedFeature("patch_gysahl_green");
 
-	public static void placedBootstrap(BootstapContext<PlacedFeature> context) {
+	public static ResourceKey<PlacedFeature> createPlacedFeature(String pName) {
+		return ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(Chococraft.MOD_ID, pName));
+	}
+
+	public static void placedBootstrap(BootstrapContext<PlacedFeature> context) {
 		HolderGetter<ConfiguredFeature<?, ?>> holdergetter = context.lookup(Registries.CONFIGURED_FEATURE);
 
 		PlacementUtils.register(context, PLACED_PATCH_GYSAHL_GREEN, holdergetter.getOrThrow(PATCH_GYSAHL_GREEN),

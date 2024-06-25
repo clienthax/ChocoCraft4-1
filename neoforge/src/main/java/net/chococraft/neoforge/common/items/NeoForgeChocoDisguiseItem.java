@@ -6,6 +6,8 @@ import net.chococraft.client.models.armor.ChocoDisguiseModel;
 import net.chococraft.common.items.armor.AbstractChocoDisguiseItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -15,23 +17,28 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.fml.DistExecutor;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
 public class NeoForgeChocoDisguiseItem extends AbstractChocoDisguiseItem {
 	private final LazyLoadedValue<HumanoidModel<?>> model;
 
-	public NeoForgeChocoDisguiseItem(ArmorMaterial material, ArmorItem.Type type, Properties properties) {
+	public NeoForgeChocoDisguiseItem(Holder<ArmorMaterial> material, ArmorItem.Type type, Properties properties) {
 		super(material, type, properties);
-		this.model = DistExecutor.unsafeRunForDist(() -> () -> new LazyLoadedValue<>(() -> this.provideArmorModelForSlot(this.type)),
-				() -> () -> null);
+		if(FMLEnvironment.dist.isClient()) {
+			this.model = new LazyLoadedValue<>(() -> this.provideArmorModelForSlot(this.type));
+		} else {
+			this.model = new LazyLoadedValue<>(() -> null);
+		}
 	}
 
 	@Override
-	public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type) {
-		return Chococraft.MOD_ID + ":textures/models/armor/chocodisguise.png";
+	@Nullable
+	public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
+		return ResourceLocation.fromNamespaceAndPath(Chococraft.MOD_ID, "textures/models/armor/chocodisguise.png");
 	}
 
 	@OnlyIn(Dist.CLIENT)

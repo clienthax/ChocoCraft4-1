@@ -1,6 +1,7 @@
 package net.chococraft.neoforge.datagen.data;
 
 import net.chococraft.registry.ModRegistry;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -12,9 +13,11 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.Tags;
 
+import java.util.concurrent.CompletableFuture;
+
 public class ChocoRecipes extends RecipeProvider {
-	public ChocoRecipes(PackOutput packOutput) {
-		super(packOutput);
+	public ChocoRecipes(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+		super(packOutput, lookupProvider);
 	}
 
 	@Override
@@ -34,13 +37,13 @@ public class ChocoRecipes extends RecipeProvider {
 
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModRegistry.CHOCOBO_SADDLE_PACK.get())
 				.pattern("TFT").pattern("WSW").pattern("TLT")
-				.define('L', Ingredient.of(Tags.Items.LEATHER)).define('T', Ingredient.of(Tags.Items.STRING))
+				.define('L', Ingredient.of(Tags.Items.LEATHERS)).define('T', Ingredient.of(Tags.Items.STRINGS))
 				.define('W', Items.WHITE_WOOL).define('F', ModRegistry.CHOCOBO_FEATHER.get()).define('S', ModRegistry.CHOCOBO_SADDLE_BAGS.get())
 				.unlockedBy("has_chocobo_saddle_bags", has(ModRegistry.CHOCOBO_SADDLE_BAGS.get())).save(output);
 
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModRegistry.CHOCOBO_SADDLE.get())
 				.pattern("TLT").pattern(" F ").define('F', ModRegistry.CHOCOBO_FEATHER.get())
-				.define('L', Ingredient.of(Tags.Items.LEATHER)).define('T', Ingredient.of(Tags.Items.STRING))
+				.define('L', Ingredient.of(Tags.Items.LEATHERS)).define('T', Ingredient.of(Tags.Items.STRINGS))
 				.unlockedBy("has_chocobo_feather", has(ModRegistry.CHOCOBO_FEATHER.get())).save(output);
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModRegistry.CHOCOBO_SADDLE.get())
 				.requires(Items.SADDLE).requires(ModRegistry.CHOCOBO_FEATHER.get())
@@ -49,7 +52,7 @@ public class ChocoRecipes extends RecipeProvider {
 
 		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModRegistry.CHOCOBO_SADDLE_BAGS.get())
 				.pattern(" F ").pattern("LSL").pattern(" L ").define('F', ModRegistry.CHOCOBO_FEATHER.get())
-				.define('L', Ingredient.of(Tags.Items.LEATHER)).define('S', ModRegistry.CHOCOBO_SADDLE.get())
+				.define('L', Ingredient.of(Tags.Items.LEATHERS)).define('S', ModRegistry.CHOCOBO_SADDLE.get())
 				.unlockedBy("has_chocobo_feather", has(ModRegistry.CHOCOBO_FEATHER.get())).save(output);
 
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModRegistry.CHOCOBO_WHISTLE.get())

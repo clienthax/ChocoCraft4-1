@@ -9,7 +9,7 @@ public class ChocoboFollowOwnerGoal extends FollowOwnerGoal {
 	private final AbstractChocobo chocobo;
 
 	public ChocoboFollowOwnerGoal(AbstractChocobo chocobo, double speedModifier, float startDistance, float stopDistance) {
-		super(chocobo, speedModifier, startDistance, stopDistance, false);
+		super(chocobo, speedModifier, startDistance, stopDistance);
 		this.chocobo = chocobo;
 	}
 

@@ -12,9 +12,12 @@ import net.chococraft.neoforge.common.entity.NeoForgeChocobo;
 import net.chococraft.neoforge.common.modifier.ModModifiers;
 import net.chococraft.neoforge.registry.ModDataSerializers;
 import net.chococraft.registry.ModEntities;
+import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
@@ -27,8 +30,8 @@ import net.neoforged.neoforge.event.entity.SpawnPlacementRegisterEvent;
 
 @Mod(Chococraft.MOD_ID)
 public class ChococraftNeoForge {
-	public ChococraftNeoForge(IEventBus eventBus) {
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, NeoForgeChocoConfig.commonSpec);
+	public ChococraftNeoForge(IEventBus eventBus, ModContainer container, Dist dist) {
+		container.registerConfig(ModConfig.Type.COMMON, NeoForgeChocoConfig.commonSpec);
 		eventBus.register(NeoForgeChocoConfig.class);
 
 		ModModifiers.BIOME_MODIFIER_SERIALIZERS.register(eventBus);
@@ -42,7 +45,7 @@ public class ChococraftNeoForge {
 
 		Chococraft.init();
 
-		if (FMLEnvironment.dist.isClient()) {
+		if (dist.isClient()) {
 			eventBus.addListener(NeoForgeClientHandler::registerEntityRenders);
 			eventBus.addListener(NeoForgeClientHandler::registerLayerDefinitions);
 
@@ -57,7 +60,7 @@ public class ChococraftNeoForge {
 	}
 
 	private void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
-		event.register(ModEntities.CHOCOBO.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractChocobo::checkChocoboSpawnRules, SpawnPlacementRegisterEvent.Operation.AND);
+		event.register(ModEntities.CHOCOBO.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractChocobo::checkChocoboSpawnRules, SpawnPlacementRegisterEvent.Operation.AND);
 	}
 
 	private void registerCapabilities(RegisterCapabilitiesEvent event) {

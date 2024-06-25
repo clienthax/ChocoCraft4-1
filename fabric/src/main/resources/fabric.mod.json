@@ -19,7 +19,7 @@
     "issues": "https://github.com/Mrbysco/ChocoCraft4/issues"
   },
   "license": "MIT",
-  "icon": "assets/chococraft/icon.png",
+  "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -36,11 +36,11 @@
     "chococraft.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.15.3",
-    "minecraft": "~1.20.4",
-    "java": ">=17",
+    "fabricloader": ">=0.15.11",
+    "minecraft": "~1.21",
+    "java": ">=21",
     "fabric-api": "*",
-    "cloth-config": ">=13",
-    "architectury": ">=11.1.13"
+    "cloth-config": ">=15",
+    "architectury": ">=13.0.2"
   }
 }

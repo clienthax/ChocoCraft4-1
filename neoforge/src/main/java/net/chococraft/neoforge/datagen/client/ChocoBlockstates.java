@@ -27,7 +27,7 @@ public class ChocoBlockstates extends BlockStateProvider {
 		VariantBlockStateBuilder builder = getVariantBuilder(block);
 		for (int i = 0; i <= block.getMaxAge(); i++) {
 			ModelFile file = models().cross(BuiltInRegistries.BLOCK.getKey(block).getPath() + "_stage" + (i),
-					new ResourceLocation(Chococraft.MOD_ID, "block/" + BuiltInRegistries.BLOCK.getKey(block).getPath() + i)).renderType("cutout");
+					ResourceLocation.fromNamespaceAndPath(Chococraft.MOD_ID, "block/" + BuiltInRegistries.BLOCK.getKey(block).getPath() + i)).renderType("cutout");
 			builder.partialState().with(block.getAgeProperty(), i).modelForState().modelFile(file).addModel();
 		}
 	}

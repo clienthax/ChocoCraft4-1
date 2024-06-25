@@ -69,8 +69,8 @@ public class NeoForgeChocobo extends AbstractChocobo {
 	@Override
 	public void addAdditionalSaveData(CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
-		compound.put(NBTKEY_SADDLE_ITEM, this.saddleItemStackHandler.serializeNBT());
-		compound.put(NBTKEY_INVENTORY, this.inventory.serializeNBT());
+		compound.put(NBTKEY_SADDLE_ITEM, this.saddleItemStackHandler.serializeNBT(this.registryAccess()));
+		compound.put(NBTKEY_INVENTORY, this.inventory.serializeNBT(this.registryAccess()));
 	}
 
 	@Override
@@ -132,14 +132,9 @@ public class NeoForgeChocobo extends AbstractChocobo {
 	public void readAdditionalSaveData(CompoundTag compound) {
 		super.readAdditionalSaveData(compound);
 
-		this.saddleItemStackHandler.deserializeNBT(compound.getCompound(NBTKEY_SADDLE_ITEM));
+		this.saddleItemStackHandler.deserializeNBT(this.registryAccess(), compound.getCompound(NBTKEY_SADDLE_ITEM));
 		setSaddleType(this.saddleItemStackHandler.getStackInSlot(0));
-		this.inventory.deserializeNBT(compound.getCompound(NBTKEY_INVENTORY));
-	}
-
-	@Override
-	public float getStepHeight() {
-		return getAbilityInfo().getStepHeight(isVehicle());
+		this.inventory.deserializeNBT(this.registryAccess(), compound.getCompound(NBTKEY_INVENTORY));
 	}
 
 	public IItemHandler getInventory() {

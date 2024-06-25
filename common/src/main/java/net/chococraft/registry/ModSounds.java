@@ -11,11 +11,11 @@ public class ModSounds {
 	public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(Chococraft.MOD_ID, Registries.SOUND_EVENT);
 
 	public static final RegistrySupplier<SoundEvent> AMBIENT_SOUND = SOUND_EVENTS.register("entity.chocobo.kweh", () ->
-			SoundEvent.createVariableRangeEvent(new ResourceLocation(Chococraft.MOD_ID, "entity.chocobo.kweh")));
+			SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Chococraft.MOD_ID, "entity.chocobo.kweh")));
 	public static final RegistrySupplier<SoundEvent> WHISTLE_SOUND_FOLLOW = SOUND_EVENTS.register("entity.chocobo.kwehwhistlefollow", () ->
-			SoundEvent.createVariableRangeEvent(new ResourceLocation(Chococraft.MOD_ID, "entity.chocobo.kwehwhistlefollow")));
+			SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Chococraft.MOD_ID, "entity.chocobo.kwehwhistlefollow")));
 	public static final RegistrySupplier<SoundEvent> WHISTLE_SOUND_STAY = SOUND_EVENTS.register("entity.chocobo.kwehwhistlestay", () ->
-			SoundEvent.createVariableRangeEvent(new ResourceLocation(Chococraft.MOD_ID, "entity.chocobo.kwehwhistlestay")));
+			SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Chococraft.MOD_ID, "entity.chocobo.kwehwhistlestay")));
 	public static final RegistrySupplier<SoundEvent> WHISTLE_SOUND_WANDER = SOUND_EVENTS.register("entity.chocobo.kwehwhistlewander", () ->
-			SoundEvent.createVariableRangeEvent(new ResourceLocation(Chococraft.MOD_ID, "entity.chocobo.kwehwhistlewander")));
+			SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Chococraft.MOD_ID, "entity.chocobo.kwehwhistlewander")));
 }

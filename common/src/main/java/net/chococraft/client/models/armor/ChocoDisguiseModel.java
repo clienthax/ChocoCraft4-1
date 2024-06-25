@@ -181,7 +181,7 @@ public class ChocoDisguiseModel extends HumanoidModel<LivingEntity> {
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
 		poseStack.pushPose();
 
 		this.setHeadRotation();
@@ -201,22 +201,22 @@ public class ChocoDisguiseModel extends HumanoidModel<LivingEntity> {
 			float f = 2.0F;
 			poseStack.scale(1.5F / f, 1.5F / f, 1.5F / f);
 			poseStack.translate(0.0F, 16.0F * 1, 0.0F);
-			chocobo_head.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+			chocobo_head.render(poseStack, buffer, packedLight, packedOverlay, color);
 			poseStack.popPose();
 			poseStack.pushPose();
 			poseStack.scale(1.0F / f, 1.0F / f, 1.0F / f);
 			poseStack.translate(0.0F, 24.0F * 1, 0.0F);
-			chocobo_body.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+			chocobo_body.render(poseStack, buffer, packedLight, packedOverlay, color);
 		} else {
-			chocobo_head.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-			chocobo_body.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-			chocobo_right_arm.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-			chocobo_left_arm.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+			chocobo_head.render(poseStack, buffer, packedLight, packedOverlay, color);
+			chocobo_body.render(poseStack, buffer, packedLight, packedOverlay, color);
+			chocobo_right_arm.render(poseStack, buffer, packedLight, packedOverlay, color);
+			chocobo_left_arm.render(poseStack, buffer, packedLight, packedOverlay, color);
 		}
-		chocobo_leg_right.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-		chocobo_leg_left.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-		chocobo_claw_right.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-		chocobo_claw_left.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+		chocobo_leg_right.render(poseStack, buffer, packedLight, packedOverlay, color);
+		chocobo_leg_left.render(poseStack, buffer, packedLight, packedOverlay, color);
+		chocobo_claw_right.render(poseStack, buffer, packedLight, packedOverlay, color);
+		chocobo_claw_left.render(poseStack, buffer, packedLight, packedOverlay, color);
 		poseStack.popPose();
 	}
 

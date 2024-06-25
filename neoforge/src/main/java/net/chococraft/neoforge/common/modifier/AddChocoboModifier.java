@@ -1,6 +1,6 @@
 package net.chococraft.neoforge.common.modifier;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.chococraft.neoforge.common.config.NeoForgeChocoConfig;
 import net.chococraft.registry.ModEntities;
 import net.minecraft.core.Holder;
@@ -29,7 +29,7 @@ public record AddChocoboModifier(HolderSet<Biome> biomes) implements BiomeModifi
 	}
 
 	@Override
-	public Codec<? extends BiomeModifier> codec() {
+	public MapCodec<? extends BiomeModifier> codec() {
 		return ModModifiers.ADD_CHOCOBO.get();
 	}
 }

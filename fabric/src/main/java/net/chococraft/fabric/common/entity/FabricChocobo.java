@@ -23,7 +23,6 @@ public class FabricChocobo extends AbstractChocobo implements ContainerListener 
 
 	public FabricChocobo(EntityType<? extends AbstractChocobo> type, Level world) {
 		super(type, world);
-		this.setMaxUpStep(1.0F);
 		this.createInventory();
 	}
 
@@ -91,7 +90,7 @@ public class FabricChocobo extends AbstractChocobo implements ContainerListener 
 			if (!itemStack.isEmpty()) {
 				CompoundTag compoundTag2 = new CompoundTag();
 				compoundTag2.putByte("Slot", (byte) i);
-				itemStack.save(compoundTag2);
+				itemStack.save(this.registryAccess(), compoundTag2);
 				listTag.add(compoundTag2);
 			}
 		}
@@ -109,7 +108,7 @@ public class FabricChocobo extends AbstractChocobo implements ContainerListener 
 			CompoundTag compoundTag2 = listTag.getCompound(i);
 			int j = compoundTag2.getByte("Slot") & 255;
 			if (j < this.inventory.getContainerSize()) {
-				this.inventory.setItem(j, ItemStack.of(compoundTag2));
+				this.inventory.setItem(j, ItemStack.parseOptional(this.registryAccess(), compoundTag2));
 			}
 		}
 	}

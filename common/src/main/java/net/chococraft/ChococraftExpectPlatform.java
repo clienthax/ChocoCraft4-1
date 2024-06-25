@@ -7,6 +7,7 @@ import net.chococraft.common.entity.properties.ChocoboColor;
 import net.chococraft.common.entity.properties.MovementType;
 import net.chococraft.common.inventory.SaddleBagMenu;
 import net.chococraft.common.items.armor.AbstractChocoDisguiseItem;
+import net.minecraft.core.Holder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.world.entity.EntityType;
@@ -50,7 +51,7 @@ public class ChococraftExpectPlatform {
 	}
 
 	@ExpectPlatform
-	public static AbstractChocoDisguiseItem constructChocoDisguise(ArmorMaterial material, ArmorItem.Type type, Item.Properties properties) {
+	public static AbstractChocoDisguiseItem constructChocoDisguise(Holder<ArmorMaterial> material, ArmorItem.Type type, Item.Properties properties) {
 		// Just throw an error, the content should get replaced at runtime.
 		throw new AssertionError();
 	}

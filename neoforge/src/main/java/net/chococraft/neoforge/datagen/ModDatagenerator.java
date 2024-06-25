@@ -8,11 +8,11 @@ import net.chococraft.neoforge.datagen.client.ChocoBlockstates;
 import net.chococraft.neoforge.datagen.client.ChocoItemModels;
 import net.chococraft.neoforge.datagen.client.ChocoLanguage;
 import net.chococraft.neoforge.datagen.client.ChocoSoundProvider;
-import net.chococraft.neoforge.datagen.client.patchouli.PatchouliProvider;
 import net.chococraft.neoforge.datagen.data.ChocoLoot;
 import net.chococraft.neoforge.datagen.data.ChocoRecipes;
 import net.minecraft.core.Cloner;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
@@ -28,7 +28,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.Tags.Biomes;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -40,19 +40,20 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class ModDatagenerator {
 	@SubscribeEvent
 	public static void gatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
 		PackOutput packOutput = generator.getPackOutput();
 		ExistingFileHelper helper = event.getExistingFileHelper();
+		CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
 		if (event.includeServer()) {
-			generator.addProvider(event.includeServer(), new ChocoLoot(packOutput));
-			generator.addProvider(event.includeServer(), new ChocoRecipes(packOutput));
+			generator.addProvider(event.includeServer(), new ChocoLoot(packOutput, lookupProvider));
+			generator.addProvider(event.includeServer(), new ChocoRecipes(packOutput, lookupProvider));
 
-			generator.addProvider(event.includeServer(), new PatchouliProvider(packOutput));
+//			generator.addProvider(event.includeServer(), new PatchouliProvider(packOutput));
 
 			generator.addProvider(event.includeServer(), new DatapackBuiltinEntriesProvider(
 					packOutput, CompletableFuture.supplyAsync(ModDatagenerator::getProvider), Set.of(Chococraft.MOD_ID)));
@@ -68,12 +69,8 @@ public class ModDatagenerator {
 
 	private static RegistrySetBuilder.PatchedRegistries getProvider() {
 		final RegistrySetBuilder registryBuilder = new RegistrySetBuilder();
-		registryBuilder.add(Registries.CONFIGURED_FEATURE, context -> {
-			ModFeatures.configuredBootstrap(context);
-		});
-		registryBuilder.add(Registries.PLACED_FEATURE, context -> {
-			ModFeatures.placedBootstrap(context);
-		});
+		registryBuilder.add(Registries.CONFIGURED_FEATURE, ModFeatures::configuredBootstrap);
+		registryBuilder.add(Registries.PLACED_FEATURE, ModFeatures::placedBootstrap);
 		registryBuilder.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, context -> {
 			HolderGetter<Biome> biomeGetter = context.lookup(Registries.BIOME);
 			HolderGetter<PlacedFeature> placedGetter = context.lookup(Registries.PLACED_FEATURE);
@@ -104,6 +101,6 @@ public class ModDatagenerator {
 	}
 
 	public static ResourceKey<BiomeModifier> createModifierKey(String name) {
-		return ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, new ResourceLocation(Chococraft.MOD_ID, name));
+		return ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, ResourceLocation.fromNamespaceAndPath(Chococraft.MOD_ID, name));
 	}
 }

@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 
 
 public class ChocoboBookScreen extends Screen {
-	private final static ResourceLocation TEXTURE = new ResourceLocation(Chococraft.MOD_ID, "textures/gui/chocobo_book.png");
+	private final static ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(Chococraft.MOD_ID, "textures/gui/chocobo_book.png");
 	private final Component bookTitle = Component.literal("The Chocopedia").withStyle(ChatFormatting.GOLD);
 	private final Component bookAuthor = Component.literal("by Clienthax");
 

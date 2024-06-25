@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChocodisguiseArmorLayer<T extends LivingEntity, M extends HumanoidModel<T>> extends RenderLayer<T, M> {
-	private static final ResourceLocation ARMOR_LOCATION = new ResourceLocation(Chococraft.MOD_ID, "textures/models/armor/chocodisguise.png");
+	private static final ResourceLocation ARMOR_LOCATION = ResourceLocation.fromNamespaceAndPath(Chococraft.MOD_ID, "textures/models/armor/chocodisguise.png");
 	private final Map<ArmorItem.Type, ChocoDisguiseModel> chocoDisguiseMap = new HashMap<>();
 
 	public ChocodisguiseArmorLayer(RenderLayerParent<T, M> renderLayerParent, EntityModelSet modelSet) {
@@ -50,7 +50,7 @@ public class ChocodisguiseArmorLayer<T extends LivingEntity, M extends HumanoidM
 			((HumanoidModel) this.getParentModel()).copyPropertiesTo(humanoidModel);
 			this.setPartVisibility(humanoidModel, convertSlot(slot));
 			boolean bl2 = itemStack.hasFoil();
-			this.renderModel(poseStack, multiBufferSource, i, armorItem, bl2, humanoidModel, 1.0F, 1.0F, 1.0F, (String) null);
+			this.renderModel(poseStack, multiBufferSource, i, armorItem, bl2, humanoidModel, -1);
 		}
 	}
 
@@ -89,9 +89,9 @@ public class ChocodisguiseArmorLayer<T extends LivingEntity, M extends HumanoidM
 	}
 
 	private void renderModel(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, ArmorItem armorItem, boolean bl, ChocoDisguiseModel humanoidModel,
-							 float f, float g, float h, @Nullable String string) {
-		VertexConsumer vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(this.getArmorLocation()), false, bl);
-		humanoidModel.renderToBuffer(poseStack, vertexConsumer, i, OverlayTexture.NO_OVERLAY, f, g, h, 1.0F);
+							 int color) {
+		VertexConsumer vertexConsumer = ItemRenderer.getArmorFoilBuffer(multiBufferSource, RenderType.armorCutoutNoCull(this.getArmorLocation()), bl);
+		humanoidModel.renderToBuffer(poseStack, vertexConsumer, i, OverlayTexture.NO_OVERLAY, color);
 	}
 
 	private ChocoDisguiseModel getArmorModel(ArmorItem.Type equipmentSlot) {
