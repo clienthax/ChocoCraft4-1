@@ -1,4 +1,4 @@
 {
   "type": "chococraft:add_chocobo",
-  "biomes": "#forge:is_mountain"
+  "biomes": "#c:is_mountain"
 }

@@ -26,7 +26,7 @@ public class NeoForgeSaddleBagMenu extends SaddleBagMenu {
 		UUID uuid = buffer.readUUID();
 		List<NeoForgeChocobo> chocobos = inventory.player.level().getEntitiesOfClass(NeoForgeChocobo.class, inventory.player.getBoundingBox().inflate(16.0D),
 				(test) -> test.getUUID().equals(uuid));
-		NeoForgeChocobo chocobo = chocobos.isEmpty() ? null : chocobos.get(0);
+		NeoForgeChocobo chocobo = chocobos.isEmpty() ? null : chocobos.getFirst();
 		return new NeoForgeSaddleBagMenu(windowId, inventory, chocobo);
 	}
 

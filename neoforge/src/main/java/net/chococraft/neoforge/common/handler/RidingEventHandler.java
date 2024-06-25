@@ -5,7 +5,6 @@ import net.chococraft.common.entity.AbstractChocobo;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityMountEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 
 @EventBusSubscriber(modid = Chococraft.MOD_ID)
 public class RidingEventHandler {
