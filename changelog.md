@@ -1,2 +1,2 @@
-### Version 0.10.2
-* Adjust the data serializer used by the Chocobo Entity
+### Version 0.11.0
+* Initial update to 1.21
