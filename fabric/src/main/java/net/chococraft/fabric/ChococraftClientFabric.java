@@ -27,7 +27,7 @@ public class ChococraftClientFabric implements ClientModInitializer {
 		EntityModelLayerRegistry.registerModelLayer(ChococraftClient.CHICOBO, ChicoboModel::createBodyLayer);
 		EntityModelLayerRegistry.registerModelLayer(ChococraftClient.CHOCO_DISGUISE, ChocoDisguiseModel::createArmorDefinition);
 
-		EntityRendererRegistry.register(ModEntities.CHOCOBO.get(), (ctx) -> new ChocoboRenderer(ctx));
+		EntityRendererRegistry.register(ModEntities.CHOCOBO.get(), ChocoboRenderer::new);
 
 		ChococraftClient.init();
 

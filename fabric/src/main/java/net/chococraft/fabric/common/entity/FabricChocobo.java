@@ -134,9 +134,7 @@ public class FabricChocobo extends AbstractChocobo implements ContainerListener 
 				serverPlayer.nextContainerCounter();
 
 				MenuRegistry.openExtendedMenu(serverPlayer, new SimpleMenuProvider((ix, playerInventory, playerEntityx) ->
-						new FabricSaddleBagMenu(ix, playerInventory, this), this.getDisplayName()), buf -> {
-					buf.writeUUID(getUUID());
-				});
+						new FabricSaddleBagMenu(ix, playerInventory, this), this.getDisplayName()), buf -> buf.writeUUID(getUUID()));
 			}
 		}
 	}

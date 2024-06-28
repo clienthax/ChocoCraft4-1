@@ -40,7 +40,7 @@ public class ModArmorMaterial {
 	}
 
 	private static Holder<ArmorMaterial> register(String string, EnumMap<ArmorItem.Type, Integer> enumMap, int i, Holder<SoundEvent> arg, float f, float g, Supplier<Ingredient> supplier, List<ArmorMaterial.Layer> list) {
-		EnumMap<ArmorItem.Type, Integer> enumMap2 = new EnumMap(ArmorItem.Type.class);
+		EnumMap<ArmorItem.Type, Integer> enumMap2 = new EnumMap<>(ArmorItem.Type.class);
 		ArmorItem.Type[] var9 = ArmorItem.Type.values();
 		int var10 = var9.length;
 

@@ -50,7 +50,7 @@ public class ChocoboRenderer extends MobRenderer<AbstractChocobo, EntityModel<Ab
 	private final EntityModel<AbstractChocobo> chocoboModel = this.getModel();
 
 	public ChocoboRenderer(EntityRendererProvider.Context context) {
-		super(context, new AdultChocoboModel(context.bakeLayer(ChococraftClient.CHOCOBO)), 1.0f);
+		super(context, new AdultChocoboModel<>(context.bakeLayer(ChococraftClient.CHOCOBO)), 1.0f);
 		this.chicoboModel = new ChicoboModel<>(context.bakeLayer(ChococraftClient.CHICOBO));
 
 		this.addLayer(new LayerCollar(this));

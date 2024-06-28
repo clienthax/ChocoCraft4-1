@@ -37,14 +37,12 @@ public class Chococraft {
 		ModSounds.SOUND_EVENTS.register();
 		ModMenus.MENU_TYPES.register();
 
-		EntityAttributeRegistry.register(ModEntities.CHOCOBO, () -> AbstractChocobo.createAttributes());
+		EntityAttributeRegistry.register(ModEntities.CHOCOBO, AbstractChocobo::createAttributes);
 
 		LifecycleEvent.SETUP.register(() -> {
 			registerCompostables();
 
-			ModRegistry.ITEMS.forEach(supplier -> {
-				CreativeTabRegistry.append(CREATIVE_TAB, supplier.get());
-			});
+			ModRegistry.ITEMS.forEach(supplier -> CreativeTabRegistry.append(CREATIVE_TAB, supplier.get()));
 		});
 
 		PlayerEvent.PLAYER_QUIT.register((player) -> {
