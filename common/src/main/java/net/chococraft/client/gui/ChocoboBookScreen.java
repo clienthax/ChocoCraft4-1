@@ -1,7 +1,6 @@
 package net.chococraft.client.gui;
 
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.chococraft.Chococraft;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -60,27 +59,26 @@ public class ChocoboBookScreen extends Screen {
 
 	@Override
 	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		this.renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
+		super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
-		PoseStack poseStack = guiGraphics.pose();
-		poseStack.pushPose();
-		poseStack.translate(this.guiLeft, this.guiTop, 0);
-
-		guiGraphics.blit(TEXTURE, 0, 0, 0, 0, this.xSize, this.ySize);
 
 		if (this.currentPage == 0) {
-			guiGraphics.drawString(font, bookTitle, (this.xSize / 2) - (this.font.width(bookTitle) / 2), 24, 0, false);
-			guiGraphics.drawString(font, bookAuthor, (this.xSize / 2) - (this.font.width(bookAuthor) / 2), 44, 0, false);
+			guiGraphics.drawString(font, bookTitle, guiLeft + (this.xSize / 2) - (this.font.width(bookTitle) / 2), guiTop + 24, 0, false);
+			guiGraphics.drawString(font, bookAuthor, guiLeft + (this.xSize / 2) - (this.font.width(bookAuthor) / 2), guiTop + 44, 0, false);
 		} else {
 			if (currentPage > 1) {
 				this.pageMsg = Component.translatable("book.pageIndicator", currentPage - 1, Math.max(pageCount - 1, 1));
-				guiGraphics.drawString(font, this.pageMsg, ((this.xSize / 2) - (this.font.width(bookAuthor) / 2) - 6), 14, 0, false);
+				guiGraphics.drawString(font, this.pageMsg, guiLeft + ((this.xSize / 2) - (this.font.width(bookAuthor) / 2) - 6), guiTop + 14, 0, false);
 			}
 
 			this.renderPage(guiGraphics);
 		}
-		poseStack.popPose();
-		super.render(guiGraphics, mouseX, mouseY, partialTicks);
+	}
+
+	@Override
+	public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+		this.renderTransparentBackground(guiGraphics);
+		guiGraphics.blit(TEXTURE, guiLeft, guiTop, 0, 0, 192, 192);
 	}
 
 	private void renderPage(GuiGraphics guiGraphics) {
