@@ -1,2 +1,2 @@
-### Version 0.11.1
-* Fix ChocoPedia GUI
+### Version 0.11.2
+* Remove old/duplicate tags/recipes on Fabric
