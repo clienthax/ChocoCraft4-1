@@ -17,22 +17,15 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
 public class NeoForgeChocoDisguiseItem extends AbstractChocoDisguiseItem {
-	private final LazyLoadedValue<HumanoidModel<?>> model;
 
-	public NeoForgeChocoDisguiseItem(Holder<ArmorMaterial> material, ArmorItem.Type type, Properties properties) {
+	public NeoForgeChocoDisguiseItem(Holder<ArmorMaterial> material, Type type, Properties properties) {
 		super(material, type, properties);
-		if(FMLEnvironment.dist.isClient()) {
-			this.model = new LazyLoadedValue<>(() -> this.provideArmorModelForSlot(this.type));
-		} else {
-			this.model = new LazyLoadedValue<>(() -> null);
-		}
 	}
 
 	@Override
@@ -42,13 +35,16 @@ public class NeoForgeChocoDisguiseItem extends AbstractChocoDisguiseItem {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public HumanoidModel<?> provideArmorModelForSlot(ArmorItem.Type type) {
-		return new ChocoDisguiseModel(Minecraft.getInstance().getEntityModels().bakeLayer(ChococraftClient.CHOCO_DISGUISE), type);
-	}
+
 
 	@Override
 	public void initializeClient(Consumer<IClientItemExtensions> consumer) {
 		consumer.accept(new IClientItemExtensions() {
+			private final LazyLoadedValue<HumanoidModel<?>> model = new LazyLoadedValue<>(() -> this.provideArmorModelForSlot(type));
+
+			public HumanoidModel<?> provideArmorModelForSlot(ArmorItem.Type type) {
+				return new ChocoDisguiseModel(Minecraft.getInstance().getEntityModels().bakeLayer(ChococraftClient.CHOCO_DISGUISE), type);
+			}
 
 			@Override
 			public HumanoidModel<?> getHumanoidArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> _default) {
