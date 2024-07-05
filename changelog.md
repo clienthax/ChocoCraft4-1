@@ -1,2 +1,2 @@
-### Version 0.11.2
-* Remove old/duplicate tags/recipes on Fabric
+### Version 0.11.3
+* Fix crash on server-start (NeoForge)
