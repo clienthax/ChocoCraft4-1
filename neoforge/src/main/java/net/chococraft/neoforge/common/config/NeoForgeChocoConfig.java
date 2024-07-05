@@ -2,11 +2,11 @@ package net.chococraft.neoforge.common.config;
 
 import net.chococraft.Chococraft;
 import net.chococraft.common.config.ChocoConfig;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.ModConfigSpec.DoubleValue;
 import net.neoforged.neoforge.common.ModConfigSpec.IntValue;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -98,11 +98,9 @@ public class NeoForgeChocoConfig {
 		Chococraft.LOGGER.debug("Chococraft's config just got changed on the file system!");
 		if (configEvent.getConfig().getModId().equals(Chococraft.MOD_ID)) {
 			if (COMMON.chocoboPackSizeMin.get() > COMMON.chocoboPackSizeMax.get()) {
-				int t = COMMON.chocoboPackSizeMax.get();
-				COMMON.chocoboPackSizeMax.set(COMMON.chocoboPackSizeMin.get());
-				COMMON.chocoboPackSizeMin.set(t);
+				Chococraft.LOGGER.error("Chocobo Pack Size Min {} is greater than Chocobo Pack Size Max {}. This is not allowed!",
+						COMMON.chocoboPackSizeMin.get(), COMMON.chocoboPackSizeMax.get());
 			}
-			configEvent.getConfig().save();
 		}
 	}
 }
