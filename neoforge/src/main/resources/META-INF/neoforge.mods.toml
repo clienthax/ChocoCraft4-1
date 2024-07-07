@@ -18,7 +18,7 @@ Chocobos in Minecraft
 [[dependencies.chococraft]]
 modId = "neoforge"
 type = "required"
-versionRange = "[21.0.31-beta,)"
+versionRange = "[21.0.75-beta,)"
 ordering = "NONE"
 side = "BOTH"
 

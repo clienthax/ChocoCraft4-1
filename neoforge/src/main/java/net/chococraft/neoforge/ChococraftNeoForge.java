@@ -23,7 +23,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.SpawnPlacementRegisterEvent;
+import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 
 @Mod(Chococraft.MOD_ID)
 public class ChococraftNeoForge {
@@ -56,8 +56,8 @@ public class ChococraftNeoForge {
 		BreedingConfig.initializeConfig();
 	}
 
-	private void registerSpawnPlacements(SpawnPlacementRegisterEvent event) {
-		event.register(ModEntities.CHOCOBO.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractChocobo::checkChocoboSpawnRules, SpawnPlacementRegisterEvent.Operation.AND);
+	private void registerSpawnPlacements(RegisterSpawnPlacementsEvent event) {
+		event.register(ModEntities.CHOCOBO.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AbstractChocobo::checkChocoboSpawnRules, RegisterSpawnPlacementsEvent.Operation.AND);
 	}
 
 	private void registerCapabilities(RegisterCapabilitiesEvent event) {
